@@ -46,3 +46,11 @@ Network Trash Folder
 Temporary Items
 .apdisk
 *.pyc
+*.xml
+*.xml
+*.ids
+.idea/src.iml
+*.xml
+production/migrations/*.py
+*.py
+*.xml
