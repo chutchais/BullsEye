@@ -124,7 +124,6 @@ class WorkOrderDetails(models.Model):
 	user = models.ForeignKey('auth.User',blank=True,null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
-	user = models.ForeignKey('auth.User',blank=True,null=True)
 	
 	def __str__(self):
 		return self.sn
@@ -140,4 +139,26 @@ class Performing(models.Model):
 
 	def __str__(self):
 		return self.WorkOrderDetails.sn
+
+
+class PerformingDetails(models.Model):
+	S = 'String'
+	N = 'Number'
+	VALUE_CHOICES = (
+        (S, 'String'),
+        (N, 'Number'),
+    )
+	perfoming = models.ForeignKey('Performing' ,related_name='performingdetail_list')
+	parameter = models.CharField(max_length=50)
+	value = models.FloatField(null=True, blank=True)
+	value_str = models.CharField(max_length=50)
+	limit_min = models.FloatField(null=True, blank=True)
+	limit_max = models.FloatField(null=True, blank=True)
+	value_type = models.CharField(max_length=10,choices=VALUE_CHOICES)
+	result = models.BooleanField(default=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True)
+	created_date = models.DateTimeField(auto_now_add=True)
+	
+	def __str__(self):
+		return self.parameter
 

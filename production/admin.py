@@ -9,6 +9,7 @@ from .models import RoutingDetails
 from .models import Product
 from .models import WorkOrder
 from .models import WorkOrderDetails
+from .forms import StationModelForm
 
 class BomDetailsInline(admin.TabularInline):
     model = BomDetails
@@ -29,9 +30,15 @@ class StationAdmin(admin.ModelAdmin):
     search_fields = ['station']
     list_filter = ['name']
     list_display = ('station','name','description')
-    fieldsets = [
-        (None,               {'fields': ['station','name','description']}),
-    ]
+    empty_value_display = 'unknown'
+    form = StationModelForm
+    # search_fields = ['station']
+    # list_filter = ['name']
+    # list_display = ('station','name','description')
+    # fieldsets = [
+    #     (None,               {'fields': ['station','name','description']}),
+    # ]
+    # form = StationModelForm
 
 admin.site.register(Station,StationAdmin)
 
