@@ -126,7 +126,7 @@ class WorkOrderDetails(models.Model):
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
 	
 	def __str__(self):
-		return self.sn
+		return "%s on %s" % (self.sn,self.workorder)
 
 
 class Performing(models.Model):
@@ -138,7 +138,7 @@ class Performing(models.Model):
 	user = models.ForeignKey('auth.User',blank=True,null=True)
 
 	def __str__(self):
-		return self.WorkOrderDetails.sn
+		return "%s" % self.sn_wo
 
 
 class PerformingDetails(models.Model):
@@ -148,7 +148,7 @@ class PerformingDetails(models.Model):
         (S, 'String'),
         (N, 'Number'),
     )
-	perfoming = models.ForeignKey('Performing' ,related_name='performingdetail_list')
+	performing = models.ForeignKey('Performing' ,related_name='performingdetail_list')
 	parameter = models.CharField(max_length=50)
 	value = models.FloatField(null=True, blank=True)
 	value_str = models.CharField(max_length=50)

@@ -4,18 +4,42 @@ from .forms import StationModelForm
 # Create your views here.
 def post_list(request):
 # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = StationModelForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect('/thanks/')
+	title ="Welcome"
+	form = StationModelForm(request.POST or None)
+	context ={
+		"title": title,
+		"form" : form
+	}
+	if form.is_valid():
+		instance = form.save(commit=False)
+		station = form.cleaned_data["station"]
+		instance.save()
+		context ={
+			"title": "Sign up successful!!"
+		}	
+		# if not station :
+		# 	station = "new station"
+		# 	instance.station = station
+		# 	instance.save()
+		# 	context ={
+		# 	"title": "Sign up successful!!",
+		# 	}
+
+	return render(request, 'production/post_list.html',context)
+
+		# if form.is_valid():
+		# 	instance = form.save(commit=False)
+		# 	station = form.cleaned_data["station"]
+		# 	if not station:
+		# 		station = "new station"
+		# 		instance.station = station
+		# 		instance.save()
+		# 		context ={
+		# 		"title": "Sign up successful!!",
+		# 		}
 
     # if a GET (or any other method) we'll create a blank form
-    else:
-        form = StationModelForm()
+    # else:
+    #     form = StationModelForm()
 
-    return render(request, 'production/post_list.html', {'form': form})
+    

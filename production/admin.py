@@ -10,6 +10,8 @@ from .models import Product
 from .models import WorkOrder
 from .models import WorkOrderDetails
 from .forms import StationModelForm
+from .models import Performing
+from .models import PerformingDetails
 
 class BomDetailsInline(admin.TabularInline):
     model = BomDetails
@@ -65,7 +67,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['model','customer_model']
     list_display = ('name','model','rev','customer_model','customer_rev')
     fieldsets = [
-        (None,               {'fields': ['name','model','rev','customer_model','customer_rev']}),
+        (None,               {'fields': ['name','model','rev','customer_model','customer_rev','bom']}),
     ]
 
 admin.site.register(Product,ProductAdmin)
@@ -85,3 +87,19 @@ class WorkOrderAdmin(admin.ModelAdmin):
     inlines = [WorkOrderDetailsInline]
 
 admin.site.register(WorkOrder,WorkOrderAdmin)
+
+
+class PerformingAdmin(admin.ModelAdmin):
+    search_fields = ['sn_wo__sn']
+    list_filter = ['station','result','sn_wo__workorder','sn_wo__workorder__product__name']
+    list_display = ('get_sn','station','result')
+    fieldsets = [
+        (None,               {'fields': ['sn_wo','station','result']}),
+    ]
+    def get_sn(self, obj):
+        return obj.sn_wo.sn
+    get_sn.short_description = 'Serial number'
+    get_sn.admin_order_field = 'sn_wo__sn'
+
+    #inlines = [BomDetailsInline]
+admin.site.register(Performing,PerformingAdmin)
