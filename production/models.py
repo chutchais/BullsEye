@@ -29,6 +29,15 @@ class BomDetails(models.Model):
 	def __str__(self):
 		return self.pn
 
+class Family(models.Model):
+	name = models.CharField(max_length=50)
+	description = models.CharField(max_length=255)
+	created_date = models.DateTimeField(auto_now_add=True)
+	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True)
+
+	def __str__(self):
+		return self.name
 
 class Product(models.Model):
 	name = models.CharField(max_length=50)
@@ -38,6 +47,7 @@ class Product(models.Model):
 	customer_rev = models.CharField(verbose_name ='Customer Model revision',max_length=50)
 	group = models.CharField(verbose_name ='Product Group',max_length=50)
 	bom = models.ForeignKey('Bom' ,related_name='product_used')
+	family = models.ForeignKey('Family' ,related_name='product_used')
 	description = models.CharField(max_length=255)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
@@ -49,9 +59,10 @@ class Product(models.Model):
 
 class Station(models.Model):
 	"""docstring for ClassName"""
-	station = models.CharField(max_length=50)
-	name = models.CharField(max_length=50)
+	station = models.CharField(verbose_name ='Station number',max_length=50)
+	name = models.CharField(verbose_name ='Station name',max_length=50)
 	description = models.CharField(max_length=255)
+	family = models.ForeignKey('Family' ,related_name='station_used')
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
 	user = models.ForeignKey('auth.User',blank=True,null=True)
@@ -90,9 +101,11 @@ class RoutingDetails(models.Model):
 class WorkOrder(models.Model):
 	PROD = 'PROD'
 	RMA='RMA'
+	QUAL='QUAL'
 	BUILD_TYPE_CHOICES = (
         (PROD, 'Production'),
         (RMA, 'Repair'),
+        (QUAL,'Qualification')
     )
 	name = models.CharField(max_length=50)
 	description = models.CharField(max_length=255)
