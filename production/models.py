@@ -47,7 +47,7 @@ class Product(models.Model):
 	customer_rev = models.CharField(verbose_name ='Customer Model revision',max_length=50)
 	group = models.CharField(verbose_name ='Product Group',max_length=50)
 	bom = models.ForeignKey('Bom' ,related_name='product_used')
-	family = models.ForeignKey('Family' ,related_name='product_used')
+	family = models.ForeignKey('Family' ,related_name='product_used',null=True)
 	description = models.CharField(max_length=255)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
@@ -110,8 +110,8 @@ class WorkOrder(models.Model):
 	name = models.CharField(max_length=50)
 	description = models.CharField(max_length=255)
 	product = models.ForeignKey('Product' ,related_name='workorder_used')
-	qty = models.IntegerField()
-	build_type = models.CharField(max_length=10 ,choices=BUILD_TYPE_CHOICES)
+	qty = models.IntegerField(default=1)
+	build_type = models.CharField(max_length=10 ,choices=BUILD_TYPE_CHOICES,default=PROD)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
 	user = models.ForeignKey('auth.User',blank=True,null=True)
@@ -133,7 +133,7 @@ class WorkOrderDetails(models.Model):
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
 	current_staton = models.CharField(max_length=50)
 	result = models.BooleanField(default=True) #Last Result Pass/Fail
-	status = models.CharField(max_length=50,choices=STATUS_CHOICES)
+	status = models.CharField(max_length=50,choices=STATUS_CHOICES,default=IN)
 	user = models.ForeignKey('auth.User',blank=True,null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
@@ -145,13 +145,25 @@ class WorkOrderDetails(models.Model):
 class Performing(models.Model):
 	sn_wo = models.ForeignKey('WorkOrderDetails' ,related_name='performing_list')
 	station = models.CharField(max_length=50)
-	started_date = models.DateTimeField(auto_now_add=True)
-	finished_date = models.DateTimeField(auto_now_add=True)
+	started_date = models.DateTimeField()
+	finished_date = models.DateTimeField()
 	result = models.BooleanField(default=True)
 	user = models.ForeignKey('auth.User',blank=True,null=True)
 
 	def __str__(self):
 		return "%s" % self.sn_wo
+
+
+class Parameter(models.Model):
+	name = models.CharField(max_length=50)
+	group = models.CharField(max_length=50)
+	description = models.CharField(max_length=255)
+	created_date = models.DateTimeField(auto_now_add=True)
+	modified_date = models.DateTimeField(blank=True, null=True,auto_now=True)
+	user = models.ForeignKey('auth.User',blank=True,null=True)
+	
+	def __str__(self):
+		return ("%s : %s" % (self.name,self.description))
 
 
 class PerformingDetails(models.Model):
@@ -162,16 +174,16 @@ class PerformingDetails(models.Model):
         (N, 'Number'),
     )
 	performing = models.ForeignKey('Performing' ,related_name='performingdetail_list')
-	parameter = models.CharField(max_length=50)
+	parameter = models.ForeignKey('Parameter' ,related_name='performing_used')
 	value = models.FloatField(null=True, blank=True)
-	value_str = models.CharField(max_length=50)
+	value_str = models.CharField(max_length=50,null=True, blank=True)
 	limit_min = models.FloatField(null=True, blank=True)
 	limit_max = models.FloatField(null=True, blank=True)
-	value_type = models.CharField(max_length=10,choices=VALUE_CHOICES)
+	value_type = models.CharField(max_length=10,choices=VALUE_CHOICES,default=S)
 	result = models.BooleanField(default=True)
 	user = models.ForeignKey('auth.User',blank=True,null=True)
-	created_date = models.DateTimeField(auto_now_add=True)
+	created_date = models.DateTimeField()
 	
 	def __str__(self):
-		return self.parameter
+		return self.parameter.name
 

@@ -13,6 +13,15 @@ from django.views.generic import CreateView
 
 from .forms import BomDetailsFormSet, BomForm
 from .models import Bom
+from .models import Family
+from .models import Product
+from .models import Station
+from .models import WorkOrder
+from .models import WorkOrderDetails
+from django.contrib.auth.models import User
+from .models import Performing
+from .models import PerformingDetails
+from .models import Parameter
 
 # Create your views here.
 def post_list(request):
@@ -75,46 +84,6 @@ class RecipeCreateView(CreateView):
         	self.get_context_data(
         		form=form,bomdetail_form=bomdetail_form))
 
-    # def post(self, request, *args, **kwargs):
-    #     """
-    #     Handles POST requests, instantiating a form instance and its inline
-    #     formsets with the passed POST variables and then checking them for
-    #     validity.
-    #     """
-    #     self.object = None
-    #     form_class = self.get_form_class()
-    #     form = self.get_form(form_class)
-    #     bomdetail_form = BomDetailsFormSet(self.request.POST)
-    #     #instruction_form = InstructionFormSet(self.request.POST)
-    #     if (form.is_valid() and bomdetail_form.is_valid()):
-    #         return self.form_valid(form, bomdetail_form)
-    #     else:
-    #         return self.form_invalid(form, bomdetail_form)
-
-    # def form_valid(self, form, bomdetail_form):
-    #     """
-    #     Called if all forms are valid. Creates a Recipe instance along with
-    #     associated Ingredients and Instructions and then redirects to a
-    #     success page.
-    #     """
-    #     self.object = form.save()
-    #     bomdetail_form.instance = self.object
-    #     bomdetail_form.save()
-    #     #instruction_form.instance = self.object
-    #     #instruction_form.save()
-    #     return HttpResponseRedirect(self.get_success_url())
-
-    # def form_invalid(self, form, bomdetail_form):
-    #     """
-    #     Called if a form is invalid. Re-renders the context data with the
-    #     data-filled forms and errors.
-    #     """
-    #     return self.render_to_response(
-    #         self.get_context_data(form=form,
-    #                               bomdetail_form=bomdetail_form))
-
-
-
 
 @api_view(['GET', 'POST'])
 def getBOM(request):
@@ -158,90 +127,57 @@ def execute_transaction(xml):
         datetimein= root.findtext('datetimein')
         datetimeout= root.findtext('datetimeout')
         workorder= root.findtext('workorder')
-        #SPC details (child)
+
+        result=root.findtext('result')
+        if result is None:
+            result=root.findtext('parameters/parameter[@code="1101"]')
+
+        updateResult = True if result == 'PASS' else  False
+
+        
+
+        #check Master data and create object
+        #1)Family
+        objFamily,created = Family.objects.get_or_create(name=model)
+        #2)Bom
+        objBom,created = Bom.objects.get_or_create(name=partnumber,model=partnumber,rev='00')
+        #3)Product
+        objProduct,created = Product.objects.get_or_create(name=partnumber,model=partnumber,rev='00',
+            bom=objBom,family=objFamily)
+        #4)Station/Operation
+        objStation,created = Station.objects.get_or_create(station=operation,family=objFamily)
+        #5)WorkOrder
+        objWorkorder,created = WorkOrder.objects.get_or_create(name=workorder,product=objProduct)
+        #6)User
+        objUser,created = User.objects.get_or_create(username=employee,password=employee,
+            email=("%s@fabrinet.co.th" % employee ))
+        #7)Workorder and WorkorderDetail
+        objWorkOrder,created = WorkOrder.objects.get_or_create(name=workorder,product=objProduct)
+        objSnWoDetails,created = WorkOrderDetails.objects.update_or_create(sn=sn,workorder=objWorkorder,
+            user=objUser,defaults={"current_staton":operation,"result":updateResult})
+
+        #8)Performing
+        import datetime
+        d1 = datetime.datetime.strptime(datetimein,"%m/%d/%Y %H:%M:%S %p")
+        datein=d1.strftime("%Y-%m-%d %H:%M:%S") # Store this!
+        d2 = datetime.datetime.strptime(datetimeout,"%m/%d/%Y %H:%M:%S %p")
+        dateout=d2.strftime("%Y-%m-%d %H:%M:%S") # Store this!
+        objPerforming = Performing.objects.create(sn_wo=objSnWoDetails,station=operation,
+            started_date=datein,finished_date=dateout,result=updateResult,user=objUser)
+
+        #9)PerformingDetails
+        #Fits details (parameter)
         for paramElement in root.findall('parameters/parameter'):
             code = paramElement.attrib['code']
             description = paramElement.attrib['desc']
             value = paramElement.text
+            #9.1)Parameter
+            objParam,created = Parameter.objects.get_or_create(name=code,description=description)
+            objPerformingDetails =PerformingDetails.objects.create(performing=objPerforming,parameter=objParam,
+                value_str=value,result=updateResult,created_date=datein,user=objUser)
 
 
-        return ("serial %s on %s of %s -- value is : %s" % (sn,operation,shift,value ))
+        return ("Successful")
 
     except Exception as e:
         return "Failed : Unable to insert transaction %s" % e.args[0]
-
-
-
-#         #Modify by Chutchai on April 20,2016
-#         #To not accect VALIDATE transaction while ActionRequire flag is True
-#         if data_type == 'VALIDATE':
-#             ps = PerformSetting.objects.get(tester_name= testername)
-#             if ps.require_actions:
-#                 return "Not allow to execute data, found action is pending"
-
-
-#         #insert to model
-#         #xmltrack = PerformingTracking(sn='' , model='', station='', tester_name='', ticket=ticket, type='')
-#         xmltrack = PerformingTracking()
-#         xmltrack.sn = sn
-#         xmltrack.model = model
-#         xmltrack.station = station
-#         xmltrack.tester_name = testername
-#         xmltrack.location= location
-#         xmltrack.ticket = ticket
-#         xmltrack.type = data_type
-#         xmltrack.user_id = user
-#         xmltrack.result = True if result == 'P' else False
-#         import datetime
-#         from django.utils import timezone
-#         date_in = datetime.datetime.strptime(datetime_in, '%d-%m-%Y %H:%M:%S')
-#         xmltrack.datetime = timezone.make_aware(date_in, timezone.get_default_timezone())
-#         xmltrack.save()
-
-
-#         vtrack_id = xmltrack.perform_id
-
-#         #SPC details (child)
-#         for paramElement in root.findall('spc/summary_result/parameter'):
-#             parameter = paramElement.attrib['name']
-#             param_result = paramElement.findtext('result')
-#             min_value = paramElement.findtext('min')
-#             max_value = paramElement.findtext('max')
-#             param_unit = paramElement.findtext('unit')
-#             lower_limit = paramElement.findtext('lowerlimit')
-#             upper_limit = paramElement.findtext('upperlimit')
-
-#             xmlDetail = PerformingDetail()
-#             xmlDetail.perform_id = xmltrack
-#             xmlDetail.param_name = parameter
-#             xmlDetail.result = True if param_result == 'P' else False
-#             xmlDetail.min_value = min_value
-#             xmlDetail.max_value = max_value
-#             xmlDetail.unit_name = param_unit
-#             xmlDetail.lower_limit = lower_limit
-#             xmlDetail.upper_limit = upper_limit
-#             xmlDetail.spc_required = xmlDetail.is_master_required()
-#             xmlDetail.datetime = xmltrack.datetime
-#             xmlDetail.save()
-#             if data_type == 'VALIDATE':
-#                 xmlDetail.excecute_spc()
-
-#         if data_type == 'VALIDATE':
-#             #Update Perform Setting
-#             pd = PerformingDetail.objects.filter(perform_id=vtrack_id,spc_required=True,spc_result=False)
-#             ps = PerformSetting.objects.get(tester_name= testername)
-
-#             ps.last_perform_datetime = timezone.now()
-#             ps.last_perform_result = True if result == 'P' else False
-#             ps.perform_id = vtrack_id
-#             ps.last_spc_result = True if pd.count() == 0 else False
-#             #update action log. (if there is SPC failed, it requires Action log
-#             if pd.count() > 0 and ps.tester_name.control  :
-#                 ps.require_actions = True
-#             ps.save()
-#             #End Update
-
-#         return "Successful"
-
-#     except Exception as e:
-#         return "Failed : Unable to insert transaction %s" % e.args[0]

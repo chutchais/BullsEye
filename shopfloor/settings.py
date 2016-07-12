@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'shopfloor.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.blueeye'),
+        'NAME': os.path.join(BASE_DIR, 'db.bulleyes'),
     }
 }
 

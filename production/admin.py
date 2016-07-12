@@ -12,6 +12,8 @@ from .models import WorkOrderDetails
 from .forms import StationModelForm
 from .models import Performing
 from .models import PerformingDetails
+from .models import Family
+from .models import Parameter
 
 class BomDetailsInline(admin.TabularInline):
     model = BomDetails
@@ -29,11 +31,15 @@ class BomAdmin(admin.ModelAdmin):
 admin.site.register(Bom,BomAdmin)
 
 class StationAdmin(admin.ModelAdmin):
-    search_fields = ['station']
-    list_filter = ['name']
-    list_display = ('station','name','description')
+    search_fields = ['station','family']
+    list_filter = ['name','family__name']
+    list_display = ('station','name','family','description')
     empty_value_display = 'unknown'
-    form = StationModelForm
+    fieldsets = [
+        (None,               {'fields': ['station','name','family','description']}),
+    ]
+
+    #form = StationModelForm
     # search_fields = ['station']
     # list_filter = ['name']
     # list_display = ('station','name','description')
@@ -79,7 +85,7 @@ class WorkOrderDetailsInline(admin.TabularInline):
 
 class WorkOrderAdmin(admin.ModelAdmin):
     search_fields = ['name']
-    list_filter = ['product','build_type']
+    list_filter = ['product','product__name','build_type']
     list_display = ('name','description','product','qty','build_type')
     fieldsets = [
         (None,               {'fields': ['name','description','product','qty','build_type']}),
@@ -88,18 +94,51 @@ class WorkOrderAdmin(admin.ModelAdmin):
 
 admin.site.register(WorkOrder,WorkOrderAdmin)
 
+class PerformingDetailsInline(admin.TabularInline):
+    model = PerformingDetails
+    extra = 1
+    exclude = ['value','created_date','user']
 
 class PerformingAdmin(admin.ModelAdmin):
     search_fields = ['sn_wo__sn']
     list_filter = ['station','result','sn_wo__workorder','sn_wo__workorder__product__name']
-    list_display = ('get_sn','station','result')
+    list_display = ('get_sn','get_workorder','station','started_date','finished_date','result')
     fieldsets = [
         (None,               {'fields': ['sn_wo','station','result']}),
     ]
+    inlines = [PerformingDetailsInline]
+
     def get_sn(self, obj):
         return obj.sn_wo.sn
     get_sn.short_description = 'Serial number'
     get_sn.admin_order_field = 'sn_wo__sn'
 
+    def get_workorder(self, obj):
+        return obj.sn_wo.workorder
+    get_workorder.short_description = 'WorkOrder'
+    get_workorder.admin_order_field = 'sn_wo__workorder'
+
+
     #inlines = [BomDetailsInline]
 admin.site.register(Performing,PerformingAdmin)
+
+class FamilyAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_filter = ['name']
+    list_display = ('name','description','created_date','modified_date')
+    fieldsets = [
+        (None,               {'fields': ['name','description']}),
+    ]
+    
+admin.site.register(Family,FamilyAdmin)
+
+
+class ParameterAdmin(admin.ModelAdmin):
+    search_fields = ['name','group','description']
+    list_filter = ['group']
+    list_display = ('name','group','description','created_date','modified_date')
+    fieldsets = [
+        (None,               {'fields': ['name','group','description']}),
+    ]
+    
+admin.site.register(Parameter,ParameterAdmin)
