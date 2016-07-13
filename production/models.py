@@ -123,9 +123,11 @@ class WorkOrder(models.Model):
 class WorkOrderDetails(models.Model):
 	IN = 'IN'
 	DONE = 'DONE'
+	SHIPPED = 'SHIPPED'
 	STATUS_CHOICES = (
         (IN, 'In Process'),
         (DONE, 'Completed Process'),
+        (SHIPPED, 'Shipped'),
     )
 	sn = models.CharField(max_length=50)
 	workorder = models.ForeignKey('WorkOrder' ,related_name='sn_list')

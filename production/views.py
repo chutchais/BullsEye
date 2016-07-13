@@ -126,6 +126,11 @@ def execute_transaction(xml):
         model= root.findtext('model')
         datetimein= root.findtext('datetimein')
         datetimeout= root.findtext('datetimeout')
+        if datetimeout is None:
+            datetimeout = datetimein
+
+        datetimeout = datetimein if datetimeout=='' else datetimeout
+
         workorder= root.findtext('workorder')
 
         result=root.findtext('result')
@@ -158,10 +163,11 @@ def execute_transaction(xml):
 
         #8)Performing
         import datetime
-        d1 = datetime.datetime.strptime(datetimein,"%m/%d/%Y %H:%M:%S %p")
-        datein=d1.strftime("%Y-%m-%d %H:%M:%S") # Store this!
-        d2 = datetime.datetime.strptime(datetimeout,"%m/%d/%Y %H:%M:%S %p")
-        dateout=d2.strftime("%Y-%m-%d %H:%M:%S") # Store this!
+        d1 = datetime.datetime.strptime(datetimein,"%m/%d/%Y %I:%M:%S %p")
+        datein=d1.strftime("%Y-%m-%d %I:%M:%S") # Store this!
+        d2 = datetime.datetime.strptime(datetimeout,"%m/%d/%Y %I:%M:%S %p")
+        dateout=d2.strftime("%Y-%m-%d %I:%M:%S") # Store this!
+
         objPerforming = Performing.objects.create(sn_wo=objSnWoDetails,station=operation,
             started_date=datein,finished_date=dateout,result=updateResult,user=objUser)
 
