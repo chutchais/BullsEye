@@ -83,6 +83,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.bulleyes'),
     }
+    # 'ats': {
+    #     'NAME': 'ATS_Results',
+    #     'ENGINE': 'sqlserver_ado',
+    #     'HOST': '10.6.1.145\\ss2008',
+    #     'USER': 'ats_read',
+    #     'PASSWORD': 'R6ad4r#Acac1a',
+    # }
 }
 
 

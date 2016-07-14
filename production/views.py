@@ -133,13 +133,22 @@ def execute_transaction(xml):
 
         workorder= root.findtext('workorder')
 
-        result=root.findtext('result')
+        #result=root.findtext('result')
+        result=root.findtext('parameters/parameter[@code="1101"]')
         if result is None:
-            result=root.findtext('parameters/parameter[@code="1101"]')
-
-        updateResult = True if result == 'PASS' else  False
+            result='PASS'#root.findtext('parameters/parameter[@code="1101"]')
 
         
+
+        #dispose code
+        dispose_code = root.findtext('disposecode')
+
+        updateResult = True if (result == 'PASS' or dispose_code=='SHIPPED') else  False
+        
+        #if dispose code=SHIPPED , need to update status on WorkOrderDetails.status=SHIPPED
+        status_update= 'SHIPPED' if dispose_code=='SHIPPED' else 'IN'
+        updateResult = True if dispose_code=='SHIPPED' else  updateResult
+        ###############################################################
 
         #check Master data and create object
         #1)Family
@@ -159,7 +168,7 @@ def execute_transaction(xml):
         #7)Workorder and WorkorderDetail
         objWorkOrder,created = WorkOrder.objects.get_or_create(name=workorder,product=objProduct)
         objSnWoDetails,created = WorkOrderDetails.objects.update_or_create(sn=sn,workorder=objWorkorder,
-            user=objUser,defaults={"current_staton":operation,"result":updateResult})
+            user=objUser,status=status_update,defaults={"current_staton":operation,"result":updateResult})
 
         #8)Performing
         import datetime
@@ -169,7 +178,7 @@ def execute_transaction(xml):
         dateout=d2.strftime("%Y-%m-%d %I:%M:%S") # Store this!
 
         objPerforming = Performing.objects.create(sn_wo=objSnWoDetails,station=operation,
-            started_date=datein,finished_date=dateout,result=updateResult,user=objUser)
+            started_date=datein,finished_date=dateout,result=updateResult,user=objUser,dispose_code=dispose_code)
 
         #9)PerformingDetails
         #Fits details (parameter)

@@ -101,7 +101,7 @@ class PerformingDetailsInline(admin.TabularInline):
 
 class PerformingAdmin(admin.ModelAdmin):
     search_fields = ['sn_wo__sn']
-    list_filter = ['station','result','sn_wo__workorder','sn_wo__workorder__product__name']
+    list_filter = ['sn_wo__status','station','result']#'sn_wo__workorder','sn_wo__workorder__product__name'
     list_display = ('get_sn','get_workorder','station','started_date','finished_date','result')
     fieldsets = [
         (None,               {'fields': ['sn_wo','station','result']}),

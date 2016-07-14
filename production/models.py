@@ -150,6 +150,7 @@ class Performing(models.Model):
 	started_date = models.DateTimeField()
 	finished_date = models.DateTimeField()
 	result = models.BooleanField(default=True)
+	dispose_code = models.CharField(max_length=100)
 	user = models.ForeignKey('auth.User',blank=True,null=True)
 
 	def __str__(self):
