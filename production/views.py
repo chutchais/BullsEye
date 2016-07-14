@@ -24,6 +24,10 @@ from .models import PerformingDetails
 from .models import Parameter
 
 # Create your views here.
+def index(request):
+    context={}
+    return render(request, 'production/page.html',context)
+
 def post_list(request):
 # if this is a POST request we need to process the form data
 	title ="Welcome"
@@ -144,7 +148,7 @@ def execute_transaction(xml):
         dispose_code = root.findtext('disposecode')
 
         updateResult = True if (result == 'PASS' or dispose_code=='SHIPPED') else  False
-        
+
         #if dispose code=SHIPPED , need to update status on WorkOrderDetails.status=SHIPPED
         status_update= 'SHIPPED' if dispose_code=='SHIPPED' else 'IN'
         updateResult = True if dispose_code=='SHIPPED' else  updateResult
