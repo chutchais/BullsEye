@@ -54,11 +54,19 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'shopfloor.urls'
 
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+#TEMPLATE_DIRS
+# TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates/override'),
+#     os.path.join(BASE_DIR,  'templates'),)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            #os.path.join(BASE_DIR,  'templates/override'),
             os.path.join(BASE_DIR, 'templates')
+            #os.path.join(PROJECT_ROOT, 'templates').replace('\\','/'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

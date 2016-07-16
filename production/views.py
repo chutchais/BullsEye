@@ -25,7 +25,15 @@ from .models import Parameter
 
 # Create your views here.
 def index(request):
-    context={}
+    data={
+        "title":"test Title",
+        "author":"test Author",
+        "pub_date":"July 23,2016",
+        "body":"Have a good day",
+    }
+    context ={
+        "press": data
+    }
     return render(request, 'production/page.html',context)
 
 def post_list(request):

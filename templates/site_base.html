@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>{% block title %}Fabrinet{% endblock title %}</title>
+<style type="text/css">
+body {
+	text-align: center;
+}
+#container {
+	margin: 0 auto;
+	width: 70%;
+	text-align: left;
+}
+.header {
+	background-color: #000;
+	color: #fff;
+}
+{% block extra_style %}{% endblock %}
+</style>
+
+<script>
+{% block extra_js %}{% endblock extra_js %}
+</script>
+
+</head>
+{% block extra_head %}{% endblock %}
+<body {% spaceless %}
+	{% block extra_body %}{% endblock extra_body %}
+	{% endspaceless %}>
+<div id="container">
+<div class="header">
+<h1>
+{% block header %}{% endblock header %}
+</h1>
+</div>
+{% block site_content %}{% endblock site_content %}
+</div>
+</body>
+</html>

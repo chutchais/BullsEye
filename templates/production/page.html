@@ -1,4 +1,16 @@
 {% extends "production/base.html" %}
+
+{% block title %}
+{{ block.super }} : {{ press.title }}
+{% endblock title %}
+
 {% block content %}
-This is the body of my press release.
+<h2>{{ press.title }}</h2>
+<p>
+Author: {{ press.author }}<br/>
+Date: {{ press.pub_date }}<br/>
+</p>
+<p>
+{{ press.body }}
+</p>
 {% endblock content %}

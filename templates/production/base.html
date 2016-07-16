@@ -1,27 +1,11 @@
-<html>
-<head>
-<title>Press Release</title>
-<style type="text/css">
-body {
-text-align: center;
-}
-#container {
-margin: 0 auto;
-width: 70%;
-text-align: left;
-}
-.header {
-background-color: #000;
-color: #fff;
-}
-</style>
-</head>
-<body>
-<div id="container">
-<div class="header">
-<h1>MyCompany Press Releases</h1>
-</div>
-{% block content %}{% endblock content %}
-</div>
-</body>
-</html>
+{% extends "site_base.html" %}
+
+{% block header %}
+	MyCompany Press Releases
+{% endblock header %}
+
+{% block site_content %}
+	{% block content %}{% endblock %}
+	<hr/>
+	For questions regarding press releases, please contact John Doe at 555-5555.
+{% endblock site_content %}
