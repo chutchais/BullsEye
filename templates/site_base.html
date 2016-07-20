@@ -1,19 +1,20 @@
+{% load staticfiles %}
+
 <html>
 <head>
 <title>{% block title %}Fabrinet{% endblock title %}</title>
-<style type="text/css">
-body {
-	text-align: center;
-}
-#container {
-	margin: 0 auto;
-	width: 70%;
-	text-align: left;
-}
-.header {
-	background-color: #000;
-	color: #fff;
-}
+
+<!-- Bootstrap core CSS -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!-- <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">-->
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'bootstrap/css/dashboard.css' %}" rel="stylesheet">
+
+
+
 {% block extra_style %}{% endblock %}
 </style>
 
@@ -34,5 +35,12 @@ body {
 </div>
 {% block site_content %}{% endblock site_content %}
 </div>
+
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script href="{% static 'bootstrap/js/jquery.min.js' %}" ></script>
+    <script href="{% static 'bootstrap/js/bootstrap.min.js' %}" ></script>
 </body>
 </html>
