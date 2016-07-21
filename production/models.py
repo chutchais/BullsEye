@@ -147,6 +147,7 @@ class WorkOrderDetails(models.Model):
 class Performing(models.Model):
 	sn_wo = models.ForeignKey('WorkOrderDetails' ,related_name='performing_list')
 	station = models.CharField(max_length=50)
+	loop = models.IntegerField(default=1)
 	started_date = models.DateTimeField()
 	finished_date = models.DateTimeField()
 	result = models.BooleanField(default=True)
