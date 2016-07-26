@@ -34,7 +34,31 @@ def index(request):
     context ={
         "press": data
     }
-    return render(request, 'production/page.html',context)
+    return render(request, 'production/dashboard1.html',context)
+
+def dashboard2(request):
+    data={
+        "title":"test Title",
+        "author":"test Author",
+        "pub_date":"July 23,2016",
+        "body":"Have a good day",
+    }
+    context ={
+        "press": data
+    }
+    return render(request, 'production/dashboard2.html',context)
+
+def dashboard3(request):
+    data={
+        "title":"test Title",
+        "author":"test Author",
+        "pub_date":"July 23,2016",
+        "body":"Have a good day",
+    }
+    context ={
+        "press": data
+    }
+    return render(request, 'production/dashboard3.html',context)
 
 def post_list(request):
 # if this is a POST request we need to process the form data

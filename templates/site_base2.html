@@ -1,0 +1,302 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}Fabrinet Dashboard{% endblock title %}</title>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{% static 'vendors/nprogress/nprogress.css' %}" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="{% static 'vendors/iCheck/skins/flat/green.css' %}" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+    <link href="{% static 'vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css' %}" rel="stylesheet">
+    <!-- JQVMap -->
+    <link href="{% static 'vendors/jqvmap/dist/jqvmap.min.css' %}" rel="stylesheet"/>
+
+    <!-- Custom Theme Style -->
+    <link href="{% static 'build/css/custom.min.css' %}" rel="stylesheet">
+
+  
+    <style>
+    {% block extra_style %}{% endblock %}
+    </style>
+
+    <script>
+    {% block extra_js %}{% endblock extra_js %}
+    </script>
+  </head>
+  {% block extra_head %}{% endblock %}
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="" class="site_title"><i class="fa fa-database"></i> <span>Fabrinet Dashboard</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile">
+              <div class="profile_pic">
+                <img src="{% static 'images/img.jpg' %}" alt="..." class="img-circle profile_img">
+              </div>
+              <div class="profile_info">
+                <span>Welcome,</span>
+                <h2>Chutchai Suebklang</h2>
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>General</h3>
+                <ul class="nav side-menu">
+                  <li><a><i class="fa fa-home"></i>Home - XOR-Dashboard<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="/dashboard/">Dashboard - Today</a></li>
+                      <li><a href="/dashboard/2">Dashboard - Current week</a></li>
+                      <li><a href="/dashboard/3">Dashboard - Current Month</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-edit"></i>Plan & Forcast <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="form.html">Commitment</a></li>
+                      <li><a href="form_advanced.html">Meterial</a></li>
+                      <li><a href="form_validation.html">Process capability</a></li>
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-bar-chart-o"></i>Statistic Process Control <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="chartjs.html">GR&R</a></li>
+                      <li><a href="chartjs2.html">Tester Correlation</a></li>
+                      <li><a href="morisjs.html">Data distribution</a></li>
+                      <li><a href="echarts.html">X Bar Charts</a></li>
+                      <li><a href="other_charts.html">Historgram</a></li>
+                      <li><a href="other_charts.html">Parameter - Box plot</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-clone"></i>Performance & Utilization <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="fixed_sidebar.html">Process Performance</a></li>
+                      <li><a href="fixed_footer.html">Process Utilization</a></li>
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-area-chart"></i>Yield & Output <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="fixed_sidebar.html">Process Yield</a></li>
+                      <li><a href="fixed_footer.html">Process Output</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+
+
+            </div>
+            <!--<span class="label label-success pull-right">Coming Soon</span></a></li>-->
+            <!-- /sidebar menu -->
+
+            <!-- /menu footer buttons -->
+            <div class="sidebar-footer hidden-small">
+              <a data-toggle="tooltip" data-placement="top" title="Settings">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Lock">
+                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Logout">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+              </a>
+            </div>
+            <!-- /menu footer buttons -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+		             <!--<img src="images/img.jpg" alt="">-->
+                    Chutchai S
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                    <li><a href="javascript:;"> Profile</a></li>
+                    <li>
+                      <a href="javascript:;">
+                        <span class="badge bg-red pull-right">50%</span>
+                        <span>Settings</span>
+                      </a>
+                    </li>
+                    <li><a href="javascript:;">Help</a></li>
+                    <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                  </ul>
+                </li>
+
+                <li role="presentation" class="dropdown">
+                  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-envelope-o"></i>
+                    <span class="badge bg-green">6</span>
+                  </a>
+                  <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                    <li>
+                      <a>
+                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>Chutchai Suebklang</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>Chutchai Suebklang</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>Chutchai Suebklang</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>Chutchai Suebklang</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="text-center">
+                        <a>
+                          <strong>See All Alerts</strong>
+                          <i class="fa fa-angle-right"></i>
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        {% block page_content %}{% endblock page_content %}
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js' %}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js' %}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js' %}"></script>
+    <!-- Chart.js -->
+    <script src="{% static 'vendors/Chart.js/dist/Chart.min.js' %}"></script>
+    <!-- gauge.js -->
+    <script src="{% static 'vendors/gauge.js/dist/gauge.min.js' %}"></script>
+    <!-- bootstrap-progressbar -->
+    <script src="{% static 'vendors/bootstrap-progressbar/bootstrap-progressbar.min.js' %}"></script>
+    <!-- iCheck -->
+    <script src="{% static 'vendors/iCheck/icheck.min.js' %}"></script>
+    <!-- Skycons -->
+    <script src="{% static 'vendors/skycons/skycons.js' %}"></script>
+    <!-- jQuery Sparklines -->
+    <script src="{% static 'vendors/jquery-sparkline/dist/jquery.sparkline.min.js' %}"></script>
+    <!-- morris.js -->
+    <script src="{% static 'vendors/raphael/raphael.min.js' %}"></script>
+    <script src="{% static 'vendors/morris.js/morris.min.js' %}"></script>
+    <!-- gauge.js -->
+    <script src="{% static 'vendors/gauge.js/dist/gauge.min.js' %}"></script>
+    <!-- bootstrap-progressbar -->
+    <script src="{% static 'vendors/bootstrap-progressbar/bootstrap-progressbar.min.js' %}"></script>
+    <!-- Skycons -->
+    <script src="{% static 'vendors/skycons/skycons.js' %}"></script>
+    <!-- Flot -->
+    <script src="{% static 'vendors/Flot/jquery.flot.js' %}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.pie.js' %}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.time.js' %}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.stack.js' %}"></script>
+    <script src="{% static 'vendors/Flot/jquery.flot.resize.js' %}"></script>
+    <!-- Flot plugins -->
+    <script src="{% static 'vendors/flot.orderbars/js/jquery.flot.orderBars.js' %}"></script>
+    <script src="{% static 'vendors/flot-spline/js/jquery.flot.spline.min.js' %}"></script>
+    <script src="{% static 'vendors/flot.curvedlines/curvedLines.js' %}"></script>
+    <!-- DateJS -->
+    <script src="{% static 'vendors/DateJS/build/date.js' %}"></script>
+    <!-- JQVMap -->
+    <script src="{% static 'vendors/jqvmap/dist/jquery.vmap.js' %}"></script>
+    <script src="{% static 'vendors/jqvmap/dist/maps/jquery.vmap.world.js' %}"></script>
+    <script src="{% static 'vendors/jqvmap/examples/js/jquery.vmap.sampledata.js' %}"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static 'js/moment/moment.min.js' %}"></script>
+    <script src="{% static 'js/datepicker/daterangepicker.js' %}"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'build/js/custom.min.js' %}"></script>
+
+    {% block java_content %}{% endblock java_content %}
+  </body>
+</html>
