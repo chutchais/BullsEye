@@ -54,3 +54,4 @@ Temporary Items
 production/migrations/*.py
 *.py
 *.xml
+production/static/
